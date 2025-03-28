@@ -1,0 +1,288 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Login Container */
+.login-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-top: 2rem;
+}
+
+/* Sidebar Styles */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: white;
+    color: #333;
+    transition: all 0.3s;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar.active {
+    margin-left: -250px;
+}
+
+.sidebar .sidebar-header {
+    padding: 20px;
+    background: #f8f9fa;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar ul.components {
+    padding: 20px 0;
+}
+
+.sidebar ul li a {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #f8f9fa;
+    color: #6200EA;
+}
+
+.sidebar ul li.active > a {
+    background: #6200EA;
+    color: white;
+}
+
+.user-info {
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+/* Content Area */
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Schedule Styles */
+.schedule-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.header-cell {
+    background: #f8f9fa;
+    padding: 15px 10px;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #1a73e8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+    height: 60px;
+}
+
+.time-cell {
+    background: #f8f9fa;
+    padding: 15px 10px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #666;
+}
+
+.day-cell {
+    background: #ffffff;
+    min-height: 60px;
+    border-radius: 12px;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+}
+
+.activity-card {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 4px;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Category-specific styles */
+.activity-card.leisure {
+    background-color: #FFF3E0;
+    border-left: 4px solid #FF9800;
+}
+
+.activity-card.career {
+    background-color: #E3F2FD;
+    border-left: 4px solid #2196F3;
+}
+
+.activity-card.health {
+    background-color: #E8F5E9;
+    border-left: 4px solid #4CAF50;
+}
+
+.activity-card.relationships {
+    background-color: #FCE4EC;
+    border-left: 4px solid #E91E63;
+}
+
+.activity-card.personal_development {
+    background-color: #F3E5F5;
+    border-left: 4px solid #9C27B0;
+}
+
+.activity-card.finances {
+    background-color: #E0F2F1;
+    border-left: 4px solid #009688;
+}
+
+.activity-card.spirituality {
+    background-color: #EDE7F6;
+    border-left: 4px solid #673AB7;
+}
+
+.activity-card.contribution {
+    background-color: #FBE9E7;
+    border-left: 4px solid #FF5722;
+}
+
+.activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.card-description {
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: #666;
+}
+
+.card-category {
+    font-size: 11px;
+    font-weight: 500;
+    color: #1a73e8;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.time-range {
+    margin-left: auto;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #6200EA;
+    box-shadow: 0 0 0 2px rgba(98,0,234,0.2);
+}
+
+.btn-primary {
+    background-color: #6200EA;
+    border-color: #6200EA;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5000c8;
+    border-color: #5000c8;
+    box-shadow: 0 4px 8px rgba(98,0,234,0.2);
+}
+
+/* Assessment Styles */
+.assessment-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.area-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.area-title {
+    color: #6200EA;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+    .sidebar.active {
+        margin-left: 0;
+    }
+    .schedule-header, .schedule-row {
+        grid-template-columns: 60px repeat(7, 1fr);
+    }
+    .time-cell {
+        font-size: 12px;
+    }
+    .activity-card {
+        font-size: 11px;
+    }
+} 

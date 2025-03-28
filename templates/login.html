@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block auth_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="login-container">
+                <h1 class="text-center mb-4">🌟 Your Routine</h1>
+                
+                <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">
+                            {{ get_text('login') }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">
+                            {{ get_text('signup') }}
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="authTabsContent">
+                    <!-- Login Form -->
+                    <div class="tab-pane fade show active" id="login" role="tabpanel">
+                        <form method="POST" action="{{ url_for('login') }}">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">{{ get_text('username') }}</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">{{ get_text('password') }}</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">{{ get_text('login') }}</button>
+                        </form>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div class="tab-pane fade" id="signup" role="tabpanel">
+                        <form method="POST" action="{{ url_for('signup') }}">
+                            <div class="mb-3">
+                                <label for="new_username" class="form-label">{{ get_text('username') }}</label>
+                                <input type="text" class="form-control" id="new_username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">{{ get_text('password') }}</label>
+                                <input type="password" class="form-control" id="new_password" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">{{ get_text('confirm_password') }}</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">{{ get_text('signup') }}</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Language Selector -->
+                <div class="mt-4 text-center">
+                    <form method="POST" action="{{ url_for('change_language') }}" class="d-inline">
+                        <select name="language" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                            <option value="pt" {% if session.get('language') == 'pt' %}selected{% endif %}>Português</option>
+                            <option value="en" {% if session.get('language') == 'en' %}selected{% endif %}>English</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

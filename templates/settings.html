@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">⚙️ {{ get_text('settings') }}</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Language Settings</h5>
+                    <form method="POST" action="{{ url_for('change_language') }}">
+                        <div class="mb-3">
+                            <label for="language" class="form-label">{{ get_text('select_language') }}</label>
+                            <select class="form-select" id="language" name="language" onchange="this.form.submit()">
+                                <option value="pt" {% if session.get('language') == 'pt' %}selected{% endif %}>Português</option>
+                                <option value="en" {% if session.get('language') == 'en' %}selected{% endif %}>English</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Account Settings</h5>
+                    <form method="POST" action="{{ url_for('update_password') }}">
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

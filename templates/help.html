@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">❓ {{ get_text('help') }}</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Getting Started</h5>
+                    <p>Welcome to Your Routine! This application helps you organize your daily activities and track your personal development across different life areas.</p>
+                    
+                    <h6 class="mt-4">Key Features:</h6>
+                    <ul>
+                        <li><strong>Schedule Management:</strong> Add, edit, and organize your daily activities</li>
+                        <li><strong>Life Balance Assessment:</strong> Evaluate your time and satisfaction across different life areas</li>
+                        <li><strong>Personal Development Tracking:</strong> Monitor your progress and get personalized suggestions</li>
+                        <li><strong>Multilingual Support:</strong> Available in English and Portuguese</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">How to Use</h5>
+                    
+                    <h6 class="mt-3">Adding Activities:</h6>
+                    <ol>
+                        <li>Click the "Add Event" button in the Schedule view</li>
+                        <li>Fill in the activity details (title, category, description)</li>
+                        <li>Select the days and time for the activity</li>
+                        <li>Click "Add" to save</li>
+                    </ol>
+
+                    <h6 class="mt-3">Managing Activities:</h6>
+                    <ul>
+                        <li>Click on any activity to edit it</li>
+                        <li>Drag activities to different time slots to reschedule</li>
+                        <li>Use different colors for different categories</li>
+                    </ul>
+
+                    <h6 class="mt-3">Self-Assessment:</h6>
+                    <ol>
+                        <li>Go to the Dashboard</li>
+                        <li>Use the sliders to rate your time and satisfaction for each area</li>
+                        <li>Select your focus areas</li>
+                        <li>Save your assessment to get personalized suggestions</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tips for Success</h5>
+                    <ul>
+                        <li>Start with a few key activities and gradually build your schedule</li>
+                        <li>Be honest in your self-assessment to get meaningful suggestions</li>
+                        <li>Regularly review and adjust your schedule based on your needs</li>
+                        <li>Use the color coding to quickly identify different types of activities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Need More Help?</h5>
+                    <p>If you have any questions or need assistance, please contact us:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope"></i> support@yourroutine.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">FAQ</a></li>
+                        <li><a href="#" class="text-decoration-none">User Guide</a></li>
+                        <li><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

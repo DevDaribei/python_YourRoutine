@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Column - Already exists in base.html -->
+        <div class="col-md-3">
+            <!-- The sidebar is already handled in base.html -->
+        </div>
+
+        <!-- Middle Column - Assessment Form -->
+        <div class="col-md-6">
+            <h1 class="mb-4">🏠 {{ get_text('dashboard') }}</h1>
+            <p class="lead">{{ get_text('welcome') }}</p>
+
+            <!-- Self Assessment Section -->
+            <div class="assessment-container">
+                <h2 class="mb-4">📊 {{ get_text('self_assessment') }}</h2>
+                
+                <form id="assessmentForm" method="POST" action="{{ url_for('save_assessment') }}">
+                    <!-- Areas -->
+                    {% set areas = [
+                        ('leisure', '🎮'),
+                        ('career', '💼'),
+                        ('health', '💪'),
+                        ('relationships', '❤️'),
+                        ('personal_development', '🎯'),
+                        ('finances', '💰'),
+                        ('spirituality', '🧘'),
+                        ('contribution', '🤝')
+                    ] %}
+
+                    {% for area, icon in areas %}
+                    <div class="area-card">
+                        <h3 class="area-title">{{ icon }} {{ get_text(area) }}</h3>
+                        
+                        <!-- Time Slider -->
+                        <div class="mb-3">
+                            <label class="form-label">{{ get_text(area + '_time') }}</label>
+                            <div class="d-flex align-items-center">
+                                <input type="range" class="form-range assessment-slider" 
+                                       name="{{ area }}_time" min="0" max="10" value="5"
+                                       oninput="this.nextElementSibling.value = this.value">
+                                <output class="ms-3">5</output>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small>{{ get_text('no_time') }}</small>
+                                <small>{{ get_text('ideal_time') }}</small>
+                            </div>
+                        </div>
+
+                        <!-- Satisfaction Slider -->
+                        <div class="mb-3">
+                            <label class="form-label">{{ get_text(area + '_satisfaction') }}</label>
+                            <div class="d-flex align-items-center">
+                                <input type="range" class="form-range assessment-slider" 
+                                       name="{{ area }}_satisfaction" min="0" max="10" value="5"
+                                       oninput="this.nextElementSibling.value = this.value">
+                                <output class="ms-3">5</output>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small>{{ get_text('not_satisfied') }}</small>
+                                <small>{{ get_text('fully_satisfied') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Focus Areas -->
+                    <div class="mb-4">
+                        <h3 class="mb-3">{{ get_text('focus_areas') }}</h3>
+                        <div class="row">
+                            {% for area, icon in areas %}
+                            <div class="col-md-3 mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="focus_areas" value="{{ area }}" 
+                                           id="focus_{{ area }}">
+                                    <label class="form-check-label" for="focus_{{ area }}">
+                                        {{ icon }} {{ get_text(area) }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> {{ get_text('save_assessment') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column - Missions and Challenges -->
+        <div class="col-md-3">
+            <div class="missions-container sticky-top" style="top: 20px;">
+                <h2 class="mb-4">🚀 {{ get_text('missions_challenges') }}</h2>
+                
+                {% if session.get('focus_areas') %}
+                    {% for area in session.get('focus_areas') %}
+                        {% if session.get('assessment_data', {}).get(area, {}).get('time', 0) < 5 %}
+                        <div class="alert alert-warning">
+                            <h4>{{ get_text('mission_for') }} {{ get_text(area) }}</h4>
+                            <p>{{ get_text('need_more_time') }}</p>
+                            <p class="mb-0"><strong>{{ get_text('suggestion') }}:</strong> {{ get_text('add_activities') }}</p>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <h4>{{ get_text(area) }}</h4>
+                            <p>{{ get_text('doing_well') }}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">{{ get_text('choose_focus_areas') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved assessment data if available
+    const assessmentData = document.getElementById('assessment-data').dataset.assessment;
+    const savedData = assessmentData ? JSON.parse(assessmentData) : {};
+    
+    if (savedData) {
+        Object.entries(savedData).forEach(([area, values]) => {
+            const timeSlider = document.querySelector(`input[name="${area}_time"]`);
+            const satisfactionSlider = document.querySelector(`input[name="${area}_satisfaction"]`);
+            
+            if (timeSlider) {
+                timeSlider.value = values.time;
+                timeSlider.nextElementSibling.value = values.time;
+            }
+            
+            if (satisfactionSlider) {
+                satisfactionSlider.value = values.satisfaction;
+                satisfactionSlider.nextElementSibling.value = values.satisfaction;
+            }
+        });
+    }
+
+    // Load saved focus areas if available
+    const focusData = document.getElementById('focus-data').dataset.focus;
+    const focusAreas = focusData ? JSON.parse(focusData) : [];
+    
+    focusAreas.forEach(area => {
+        const checkbox = document.querySelector(`#focus_${area}`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    });
+
+    // Handle form submission
+    const assessmentForm = document.getElementById('assessmentForm');
+    assessmentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+        
+        const formData = new FormData(this);
+        const data = new URLSearchParams(formData);
+        
+        async function saveAssessment() {
+            try {
+                const response = await fetch('{{ url_for("save_assessment") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: data.toString()
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+                alert('{{ get_text("error_saving") }}');
+            }
+        }
+        
+        saveAssessment();
+    });
+});
+</script>
+
+<!-- Hidden elements to store data -->
+<div id="assessment-data" data-assessment='{{ session.get('assessment_data', '{}') | tojson | safe }}'></div>
+<div id="focus-data" data-focus='{{ session.get('focus_areas', '[]') | tojson | safe }}'></div>
+{% endblock %} 
