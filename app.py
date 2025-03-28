@@ -153,7 +153,28 @@ TRANSLATIONS = {
         'finances_satisfaction': "Você está satisfeito com sua situação financeira?",
         'spirituality_satisfaction': "Você está satisfeito com sua vida espiritual?",
         'contribution_satisfaction': "Você está satisfeito com sua contribuição para a sociedade?",
-        'error_time': 'O horário de término deve ser depois do horário de início.'
+        'error_time': 'O horário de término deve ser depois do horário de início.',
+        'wheel_of_life': 'Roda da Vida',
+        'wheel_of_life_description': 'Visualize como seu tempo está distribuído entre as diferentes áreas da sua vida.',
+        'daily_view': 'Visualização Diária',
+        'weekly_view': 'Visualização Semanal',
+        'time_distribution': 'Distribuição do Tempo',
+        'hours': 'Horas',
+        'percentage': 'Porcentagem',
+        'insights': 'Insights',
+        'low_time_warning': 'Áreas com Pouco Tempo',
+        'consider_adding_time_to': 'Considere dedicar mais tempo a:',
+        'high_time_warning': 'Áreas com Muito Tempo',
+        'consider_balancing_time_in': 'Considere equilibrar melhor seu tempo em:',
+        'suggested_time': 'Sugestão de tempo',
+        'health_description': 'A saúde física e mental deve ser uma prioridade, incluindo atividades como exercícios, alimentação saudável, descanso e cuidados com o bem-estar psicológico.',
+        'career_description': 'A maior parte do tempo de uma pessoa adulta é geralmente dedicada ao trabalho ou à profissão. Isso inclui tarefas relacionadas ao trabalho, aprimoramento de habilidades e networking.',
+        'relationships_description': 'Os relacionamentos interpessoais, como família, amigos e parceiros, são fundamentais para o bem-estar emocional. O tempo dedicado a interações sociais e apoio mútuo.',
+        'personal_development_description': 'O crescimento pessoal envolve atividades como o aprendizado contínuo, cursos, leitura, reflexão, meditação ou qualquer outra forma de aprimoramento.',
+        'finances_description': 'A gestão financeira é importante, mas não deve consumir uma quantidade excessiva de tempo. O foco aqui é planejamento financeiro, orçamentos, e investimentos.',
+        'spirituality_description': 'A espiritualidade pode envolver práticas religiosas ou outras atividades que tragam sentido à vida, como meditação, oração ou reflexão.',
+        'leisure_description': 'O lazer é importante para o equilíbrio entre o trabalho e a vida pessoal. Isso inclui hobbies, descanso e atividades de entretenimento.',
+        'contribution_description': 'A contribuição para a comunidade, voluntariado ou qualquer forma de ajudar os outros pode ser muito gratificante.',
     },
     'en': {
         'welcome': 'Welcome to Your Routine!',
@@ -254,7 +275,28 @@ TRANSLATIONS = {
         'finances_satisfaction': "Are you satisfied with your financial situation?",
         'spirituality_satisfaction': "Are you satisfied with your spiritual life?",
         'contribution_satisfaction': "Are you satisfied with your contribution to society?",
-        'error_time': 'End time must be after start time.'
+        'error_time': 'End time must be after start time.',
+        'wheel_of_life': 'Wheel of Life',
+        'wheel_of_life_description': 'Visualize how your time is distributed across different life areas.',
+        'daily_view': 'Daily View',
+        'weekly_view': 'Weekly View',
+        'time_distribution': 'Time Distribution',
+        'hours': 'Hours',
+        'percentage': 'Percentage',
+        'insights': 'Insights',
+        'low_time_warning': 'Areas with Low Time',
+        'consider_adding_time_to': 'Consider adding more time to:',
+        'high_time_warning': 'Areas with High Time',
+        'consider_balancing_time_in': 'Consider balancing your time better in:',
+        'suggested_time': 'Suggested time',
+        'health_description': 'Physical and mental health should be a priority, including activities such as exercise, healthy eating, rest, and psychological well-being care.',
+        'career_description': 'Most of an adult\'s time is usually dedicated to work or profession. This includes work-related tasks, skill improvement, and networking.',
+        'relationships_description': 'Interpersonal relationships, such as family, friends, and partners, are fundamental to emotional well-being. Time dedicated to social interactions and mutual support.',
+        'personal_development_description': 'Personal growth involves activities such as continuous learning, courses, reading, reflection, meditation, or any other form of improvement.',
+        'finances_description': 'Financial management is important but should not consume excessive time. The focus here is on financial planning, budgets, and investments.',
+        'spirituality_description': 'Spirituality can involve religious practices or other activities that bring meaning to life, such as meditation, prayer, or reflection.',
+        'leisure_description': 'Leisure is important for work-life balance. This includes hobbies, rest, and entertainment activities.',
+        'contribution_description': 'Contributing to the community, volunteering, or any form of helping others can be very rewarding.',
     }
 }
 
@@ -571,6 +613,28 @@ def edit_activity(activity_id):
                          edit_activity=activity,
                          activities=activities,
                          category_colors=CATEGORY_COLORS,
+                         get_text=get_text)
+
+@app.route('/wheel_of_life')
+def wheel_of_life():
+    if 'logged_in' not in session or not session['logged_in']:
+        return redirect(url_for('index'))
+    
+    user = User.query.get(session['user_id'])
+    activities = Activity.query.filter_by(user_id=user.id).all()
+    
+    # Convert activities to dictionaries
+    activities_dict = [{
+        'id': activity.id,
+        'category': activity.category,
+        'title': activity.title,
+        'start_time': activity.start_time,
+        'end_time': activity.end_time,
+        'day': activity.day
+    } for activity in activities]
+    
+    return render_template('wheel_of_life.html', 
+                         activities=activities_dict,
                          get_text=get_text)
 
 if __name__ == '__main__':

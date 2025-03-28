@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Column - Already exists in base.html -->
+        <div class="col-md-3">
+            <!-- The sidebar is already handled in base.html -->
+        </div>
+
+        <!-- Middle Column - Wheel of Life -->
+        <div class="col-md-6">
+            <h1 class="mb-4">🎯 {{ get_text('wheel_of_life') }}</h1>
+            <p class="lead">{{ get_text('wheel_of_life_description') }}</p>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="timeRange" id="daily" value="daily" checked>
+                            <label class="form-check-label" for="daily">{{ get_text('daily_view') }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="timeRange" id="weekly" value="weekly">
+                            <label class="form-check-label" for="weekly">{{ get_text('weekly_view') }}</label>
+                        </div>
+                    </div>
+
+                    <div class="wheel-container" style="position: relative; height: 500px;">
+                        <canvas id="wheelOfLife"></canvas>
+                    </div>
+
+                    <div class="mt-4">
+                        <h3>{{ get_text('time_distribution') }}</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ get_text('category') }}</th>
+                                        <th>{{ get_text('hours') }}</th>
+                                        <th>{{ get_text('percentage') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timeDistribution">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Insights -->
+        <div class="col-md-3">
+            <div class="insights-container sticky-top" style="top: 20px;">
+                <h2 class="mb-4">💡 {{ get_text('insights') }}</h2>
+                <div id="insights">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('wheelOfLife').getContext('2d');
+    let wheelChart = null;
+
+    // Define categories and their colors
+    const categories = [
+        { id: 'leisure', label: '{{ get_text("leisure") }}', color: '#FF9800', icon: '🎮' },
+        { id: 'career', label: '{{ get_text("career") }}', color: '#2196F3', icon: '💼' },
+        { id: 'health', label: '{{ get_text("health") }}', color: '#4CAF50', icon: '💪' },
+        { id: 'relationships', label: '{{ get_text("relationships") }}', color: '#E91E63', icon: '❤️' },
+        { id: 'personal_development', label: '{{ get_text("personal_development") }}', color: '#9C27B0', icon: '🎯' },
+        { id: 'finances', label: '{{ get_text("finances") }}', color: '#009688', icon: '💰' },
+        { id: 'spirituality', label: '{{ get_text("spirituality") }}', color: '#673AB7', icon: '🧘' },
+        { id: 'contribution', label: '{{ get_text("contribution") }}', color: '#FF5722', icon: '🤝' }
+    ];
+
+    // Function to calculate time distribution
+    function calculateTimeDistribution(activities, timeRange) {
+        const totalHours = timeRange === 'daily' ? 24 : 168; // 24 hours for daily, 168 for weekly
+        const distribution = {};
+        let totalActivityHours = 0;
+
+        // Initialize distribution
+        categories.forEach(cat => {
+            distribution[cat.id] = {
+                hours: 0,
+                percentage: 0
+            };
+        });
+
+        // Calculate hours for each category
+        activities.forEach(activity => {
+            const start = new Date(`1970-01-01T${activity.start_time}`);
+            const end = new Date(`1970-01-01T${activity.end_time}`);
+            const hours = (end - start) / (1000 * 60 * 60);
+            
+            distribution[activity.category].hours += hours;
+            totalActivityHours += hours;
+        });
+
+        // Calculate percentages
+        categories.forEach(cat => {
+            distribution[cat.id].percentage = (distribution[cat.id].hours / totalHours) * 100;
+        });
+
+        return distribution;
+    }
+
+    // Function to update the wheel chart
+    function updateWheelChart(distribution) {
+        if (wheelChart) {
+            wheelChart.destroy();
+        }
+
+        const data = {
+            labels: categories.map(cat => `${cat.icon} ${cat.label}`),
+            datasets: [{
+                data: categories.map(cat => distribution[cat.id].percentage),
+                backgroundColor: categories.map(cat => cat.color),
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        };
+
+        const config = {
+            type: 'polarArea',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const category = categories[context.dataIndex];
+                                return `${category.label}: ${distribution[category.id].hours.toFixed(1)}h (${distribution[category.id].percentage.toFixed(1)}%)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        };
+
+        wheelChart = new Chart(ctx, config);
+    }
+
+    // Function to update the time distribution table
+    function updateTimeDistributionTable(distribution) {
+        const tbody = document.getElementById('timeDistribution');
+        tbody.innerHTML = '';
+
+        categories.forEach(cat => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${cat.icon} ${cat.label}</td>
+                <td>${distribution[cat.id].hours.toFixed(1)}h</td>
+                <td>${distribution[cat.id].percentage.toFixed(1)}%</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Function to update insights
+    function updateInsights(distribution) {
+        const insights = document.getElementById('insights');
+        insights.innerHTML = '';
+
+        // Find categories with low time allocation
+        const lowTimeCategories = categories.filter(cat => distribution[cat.id].percentage < 10);
+        if (lowTimeCategories.length > 0) {
+            const warning = document.createElement('div');
+            warning.className = 'alert alert-warning';
+            warning.innerHTML = `
+                <h5>⚠️ {{ get_text('low_time_warning') }}</h5>
+                <p>{{ get_text('consider_adding_time_to') }}:</p>
+                <ul>
+                    ${lowTimeCategories.map(cat => `<li>${cat.icon} ${cat.label}</li>`).join('')}
+                </ul>
+            `;
+            insights.appendChild(warning);
+        }
+
+        // Find categories with high time allocation
+        const highTimeCategories = categories.filter(cat => distribution[cat.id].percentage > 40);
+        if (highTimeCategories.length > 0) {
+            const warning = document.createElement('div');
+            warning.className = 'alert alert-info';
+            warning.innerHTML = `
+                <h5>💡 {{ get_text('high_time_warning') }}</h5>
+                <p>{{ get_text('consider_balancing_time_in') }}:</p>
+                <ul>
+                    ${highTimeCategories.map(cat => `<li>${cat.icon} ${cat.label}</li>`).join('')}
+                </ul>
+            `;
+            insights.appendChild(warning);
+        }
+    }
+
+    // Handle time range change
+    document.querySelectorAll('input[name="timeRange"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const timeRange = this.value;
+            const activities = {{ activities | tojson | safe }};
+            const distribution = calculateTimeDistribution(activities, timeRange);
+            updateWheelChart(distribution);
+            updateTimeDistributionTable(distribution);
+            updateInsights(distribution);
+        });
+    });
+
+    // Initial load
+    const activities = {{ activities | tojson | safe }};
+    const distribution = calculateTimeDistribution(activities, 'daily');
+    updateWheelChart(distribution);
+    updateTimeDistributionTable(distribution);
+    updateInsights(distribution);
+});
+</script>
+{% endblock %} 

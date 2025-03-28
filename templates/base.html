@@ -27,6 +27,11 @@
                         <i class="fas fa-calendar"></i> {{ get_text('your_routine') }}
                     </a>
                 </li>
+                <li class="{{ 'active' if request.endpoint == 'wheel_of_life' }}">
+                    <a href="{{ url_for('wheel_of_life') }}">
+                        <i class="fas fa-chart-pie"></i> {{ get_text('wheel_of_life') }}
+                    </a>
+                </li>
                 <li class="{{ 'active' if request.endpoint == 'settings' }}">
                     <a href="{{ url_for('settings') }}">
                         <i class="fas fa-cog"></i> {{ get_text('settings') }}

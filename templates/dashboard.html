@@ -2,18 +2,132 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <!-- Left Column - Already exists in base.html -->
-        <div class="col-md-3">
-            <!-- The sidebar is already handled in base.html -->
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">🏠 {{ get_text('dashboard') }}</h1>
+    </div>
+
+    <p class="lead">{{ get_text('welcome') }}</p>
+
+    <!-- Cards de Categorias -->
+    <div class="row mb-4">
+        <!-- Card Saúde -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-success">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">💪</div>
+                        <h5 class="card-title mb-0">{{ get_text('health') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 10-15%</p>
+                    <p class="card-text">{{ get_text('health_description') }}</p>
+                </div>
+            </div>
         </div>
 
+        <!-- Card Carreira -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">💼</div>
+                        <h5 class="card-title mb-0">{{ get_text('career') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 40-50%</p>
+                    <p class="card-text">{{ get_text('career_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Relacionamentos -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">❤️</div>
+                        <h5 class="card-title mb-0">{{ get_text('relationships') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 15-20%</p>
+                    <p class="card-text">{{ get_text('relationships_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Desenvolvimento Pessoal -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-info">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">🎯</div>
+                        <h5 class="card-title mb-0">{{ get_text('personal_development') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 10-15%</p>
+                    <p class="card-text">{{ get_text('personal_development_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Finanças -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">💰</div>
+                        <h5 class="card-title mb-0">{{ get_text('finances') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
+                    <p class="card-text">{{ get_text('finances_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Espiritualidade -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-purple">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">🧘</div>
+                        <h5 class="card-title mb-0">{{ get_text('spirituality') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
+                    <p class="card-text">{{ get_text('spirituality_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Lazer -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-orange">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">🎮</div>
+                        <h5 class="card-title mb-0">{{ get_text('leisure') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
+                    <p class="card-text">{{ get_text('leisure_description') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Contribuição -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-left-green">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-2">🤝</div>
+                        <h5 class="card-title mb-0">{{ get_text('contribution') }}</h5>
+                    </div>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
+                    <p class="card-text">{{ get_text('contribution_description') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self Assessment Section -->
+    <div class="row">
         <!-- Middle Column - Assessment Form -->
         <div class="col-md-6">
-            <h1 class="mb-4">🏠 {{ get_text('dashboard') }}</h1>
-            <p class="lead">{{ get_text('welcome') }}</p>
-
-            <!-- Self Assessment Section -->
             <div class="assessment-container">
                 <h2 class="mb-4">📊 {{ get_text('self_assessment') }}</h2>
                 
@@ -33,7 +147,7 @@
                     {% for area, icon in areas %}
                     <div class="area-card">
                         <h3 class="area-title">{{ icon }} {{ get_text(area) }}</h3>
-                        
+
                         <!-- Time Slider -->
                         <div class="mb-3">
                             <label class="form-label">{{ get_text(area + '_time') }}</label>
@@ -119,7 +233,55 @@
         </div>
     </div>
 </div>
-{% endblock %}
+
+<style>
+.card {
+    transition: transform 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.border-left-success { border-left-color: #4CAF50; }
+.border-left-primary { border-left-color: #2196F3; }
+.border-left-danger { border-left-color: #E91E63; }
+.border-left-info { border-left-color: #9C27B0; }
+.border-left-warning { border-left-color: #009688; }
+.border-left-purple { border-left-color: #673AB7; }
+.border-left-orange { border-left-color: #FF9800; }
+.border-left-green { border-left-color: #FF5722; }
+
+.category-icon {
+    font-size: 1.5rem;
+}
+
+.card-text {
+    font-size: 0.9rem;
+}
+
+.area-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.area-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.assessment-slider {
+    width: 100%;
+}
+</style>
+
+<!-- Hidden elements to store data -->
+<div id="assessment-data" data-assessment='{{ session.get('assessment_data', '{}') | tojson | safe }}'></div>
+<div id="focus-data" data-focus='{{ session.get('focus_areas', '[]') | tojson | safe }}'></div>
 
 {% block scripts %}
 <script>
@@ -155,48 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
             checkbox.checked = true;
         }
     });
-
-    // Handle form submission
-    const assessmentForm = document.getElementById('assessmentForm');
-    assessmentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitButton = this.querySelector('button[type="submit"]');
-        const originalText = submitButton.innerHTML;
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
-        
-        const formData = new FormData(this);
-        const data = new URLSearchParams(formData);
-        
-        async function saveAssessment() {
-            try {
-                const response = await fetch('{{ url_for("save_assessment") }}', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: data.toString()
-                });
-                
-                const result = await response.json();
-                if (result.success) {
-                    window.location.reload();
-                } else {
-                    throw new Error('Save failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalText;
-                alert('{{ get_text("error_saving") }}');
-            }
-        }
-        
-        saveAssessment();
-    });
 });
 </script>
-
-<!-- Hidden elements to store data -->
-<div id="assessment-data" data-assessment='{{ session.get('assessment_data', '{}') | tojson | safe }}'></div>
-<div id="focus-data" data-focus='{{ session.get('focus_areas', '[]') | tojson | safe }}'></div>
+{% endblock %}
 {% endblock %} 
