@@ -175,6 +175,10 @@ TRANSLATIONS = {
         'spirituality_description': 'A espiritualidade pode envolver práticas religiosas ou outras atividades que tragam sentido à vida, como meditação, oração ou reflexão.',
         'leisure_description': 'O lazer é importante para o equilíbrio entre o trabalho e a vida pessoal. Isso inclui hobbies, descanso e atividades de entretenimento.',
         'contribution_description': 'A contribuição para a comunidade, voluntariado ou qualquer forma de ajudar os outros pode ser muito gratificante.',
+        'wheel_focus': 'Onde Focar na sua Roda da Vida',
+        'change_password': 'Alterar Senha',
+        'current_password': 'Senha Atual',
+        'new_password': 'Nova Senha',
     },
     'en': {
         'welcome': 'Welcome to Your Routine!',
@@ -297,6 +301,10 @@ TRANSLATIONS = {
         'spirituality_description': 'Spirituality can involve religious practices or other activities that bring meaning to life, such as meditation, prayer, or reflection.',
         'leisure_description': 'Leisure is important for work-life balance. This includes hobbies, rest, and entertainment activities.',
         'contribution_description': 'Contributing to the community, volunteering, or any form of helping others can be very rewarding.',
+        'wheel_focus': 'Where to Focus on your Wheel of Life',
+        'change_password': 'Change Password',
+        'current_password': 'Current Password',
+        'new_password': 'New Password',
     }
 }
 
@@ -422,7 +430,9 @@ def help():
 # API routes
 @app.route('/change_language', methods=['POST'])
 def change_language():
-    language = request.form.get('language')
+    data = request.get_json()
+    language = data.get('language') if data else None
+    
     if language in ['pt', 'en']:
         session['language'] = language
         if 'user_id' in session:

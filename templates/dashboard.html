@@ -9,226 +9,145 @@
 
     <p class="lead">{{ get_text('welcome') }}</p>
 
-    <!-- Cards de Categorias -->
-    <div class="row mb-4">
-        <!-- Card Saúde -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-success">
+    <div class="row">
+        <!-- Left Column - Category Cards -->
+        <div class="col-md-3">
+            <!-- Card Saúde -->
+            <div class="card mb-4 border-left-success">
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center mb-2">
                         <div class="category-icon me-2">💪</div>
                         <h5 class="card-title mb-0">{{ get_text('health') }}</h5>
                     </div>
                     <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 10-15%</p>
-                    <p class="card-text">{{ get_text('health_description') }}</p>
+                    <p class="card-text small">{{ get_text('health_description') }}</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Card Carreira -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-primary">
+            <!-- Card Carreira -->
+            <div class="card mb-4 border-left-primary">
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center mb-2">
                         <div class="category-icon me-2">💼</div>
                         <h5 class="card-title mb-0">{{ get_text('career') }}</h5>
                     </div>
                     <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 40-50%</p>
-                    <p class="card-text">{{ get_text('career_description') }}</p>
+                    <p class="card-text small">{{ get_text('career_description') }}</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Card Relacionamentos -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-danger">
+            <!-- Outros cards de categoria -->
+            {% set remaining_categories = [
+                ('relationships', '❤️', 'danger', '15-20%'),
+                ('personal_development', '🎯', 'info', '10-15%'),
+                ('finances', '💰', 'warning', '5-10%'),
+                ('spirituality', '🧘', 'purple', '5-10%'),
+                ('leisure', '🎮', 'orange', '5-10%'),
+                ('contribution', '🤝', 'green', '5-10%')
+            ] %}
+
+            {% for category, icon, color, time in remaining_categories %}
+            <div class="card mb-4 border-left-{{ color }}">
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">❤️</div>
-                        <h5 class="card-title mb-0">{{ get_text('relationships') }}</h5>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="category-icon me-2">{{ icon }}</div>
+                        <h5 class="card-title mb-0">{{ get_text(category) }}</h5>
                     </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 15-20%</p>
-                    <p class="card-text">{{ get_text('relationships_description') }}</p>
+                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: {{ time }}</p>
+                    <p class="card-text small">{{ get_text(category + '_description') }}</p>
                 </div>
             </div>
+            {% endfor %}
         </div>
 
-        <!-- Card Desenvolvimento Pessoal -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-info">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">🎯</div>
-                        <h5 class="card-title mb-0">{{ get_text('personal_development') }}</h5>
-                    </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 10-15%</p>
-                    <p class="card-text">{{ get_text('personal_development_description') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Finanças -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">💰</div>
-                        <h5 class="card-title mb-0">{{ get_text('finances') }}</h5>
-                    </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
-                    <p class="card-text">{{ get_text('finances_description') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Espiritualidade -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-purple">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">🧘</div>
-                        <h5 class="card-title mb-0">{{ get_text('spirituality') }}</h5>
-                    </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
-                    <p class="card-text">{{ get_text('spirituality_description') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Lazer -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-orange">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">🎮</div>
-                        <h5 class="card-title mb-0">{{ get_text('leisure') }}</h5>
-                    </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
-                    <p class="card-text">{{ get_text('leisure_description') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Contribuição -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100 border-left-green">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="category-icon me-2">🤝</div>
-                        <h5 class="card-title mb-0">{{ get_text('contribution') }}</h5>
-                    </div>
-                    <p class="card-text text-muted small">{{ get_text('suggested_time') }}: 5-10%</p>
-                    <p class="card-text">{{ get_text('contribution_description') }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Self Assessment Section -->
-    <div class="row">
         <!-- Middle Column - Assessment Form -->
         <div class="col-md-6">
-            <div class="assessment-container">
-                <h2 class="mb-4">📊 {{ get_text('self_assessment') }}</h2>
-                
-                <form id="assessmentForm" method="POST" action="{{ url_for('save_assessment') }}">
-                    <!-- Areas -->
-                    {% set areas = [
-                        ('leisure', '🎮'),
-                        ('career', '💼'),
-                        ('health', '💪'),
-                        ('relationships', '❤️'),
-                        ('personal_development', '🎯'),
-                        ('finances', '💰'),
-                        ('spirituality', '🧘'),
-                        ('contribution', '🤝')
-                    ] %}
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">📊 {{ get_text('self_assessment') }} - {{ get_text('wheel_focus') }}</h2>
+                    
+                    <form id="assessmentForm" method="POST" action="{{ url_for('save_assessment') }}">
+                        <!-- Areas -->
+                        {% set areas = [
+                            ('leisure', '🎮'),
+                            ('career', '💼'),
+                            ('health', '💪'),
+                            ('relationships', '❤️'),
+                            ('personal_development', '🎯'),
+                            ('finances', '💰'),
+                            ('spirituality', '🧘'),
+                            ('contribution', '🤝')
+                        ] %}
 
-                    {% for area, icon in areas %}
-                    <div class="area-card">
-                        <h3 class="area-title">{{ icon }} {{ get_text(area) }}</h3>
+                        {% for area, icon in areas %}
+                        <div class="area-assessment mb-4">
+                            <h3 class="h5 mb-3">{{ icon }} {{ get_text(area) }}</h3>
 
-                        <!-- Time Slider -->
-                        <div class="mb-3">
-                            <label class="form-label">{{ get_text(area + '_time') }}</label>
-                            <div class="d-flex align-items-center">
-                                <input type="range" class="form-range assessment-slider" 
-                                       name="{{ area }}_time" min="0" max="10" value="5"
-                                       oninput="this.nextElementSibling.value = this.value">
-                                <output class="ms-3">5</output>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small>{{ get_text('no_time') }}</small>
-                                <small>{{ get_text('ideal_time') }}</small>
-                            </div>
-                        </div>
-
-                        <!-- Satisfaction Slider -->
-                        <div class="mb-3">
-                            <label class="form-label">{{ get_text(area + '_satisfaction') }}</label>
-                            <div class="d-flex align-items-center">
-                                <input type="range" class="form-range assessment-slider" 
-                                       name="{{ area }}_satisfaction" min="0" max="10" value="5"
-                                       oninput="this.nextElementSibling.value = this.value">
-                                <output class="ms-3">5</output>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small>{{ get_text('not_satisfied') }}</small>
-                                <small>{{ get_text('fully_satisfied') }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                    <!-- Focus Areas -->
-                    <div class="mb-4">
-                        <h3 class="mb-3">{{ get_text('focus_areas') }}</h3>
-                        <div class="row">
-                            {% for area, icon in areas %}
-                            <div class="col-md-3 mb-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" 
-                                           name="focus_areas" value="{{ area }}" 
-                                           id="focus_{{ area }}">
-                                    <label class="form-check-label" for="focus_{{ area }}">
-                                        {{ icon }} {{ get_text(area) }}
-                                    </label>
+                            <!-- Time Slider -->
+                            <div class="mb-3">
+                                <label class="form-label">{{ get_text(area + '_time') }}</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="range" class="form-range assessment-slider" 
+                                           name="{{ area }}_time" min="0" max="10" value="5"
+                                           oninput="this.nextElementSibling.value = this.value">
+                                    <output class="ms-3">5</output>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">{{ get_text('no_time') }}</small>
+                                    <small class="text-muted">{{ get_text('ideal_time') }}</small>
                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> {{ get_text('save_assessment') }}
-                    </button>
-                </form>
+                            <!-- Satisfaction Slider -->
+                            <div class="mb-3">
+                                <label class="form-label">{{ get_text(area + '_satisfaction') }}</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="range" class="form-range assessment-slider" 
+                                           name="{{ area }}_satisfaction" min="0" max="10" value="5"
+                                           oninput="this.nextElementSibling.value = this.value">
+                                    <output class="ms-3">5</output>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">{{ get_text('not_satisfied') }}</small>
+                                    <small class="text-muted">{{ get_text('fully_satisfied') }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ get_text('save_assessment') }}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <!-- Right Column - Missions and Challenges -->
         <div class="col-md-3">
-            <div class="missions-container sticky-top" style="top: 20px;">
-                <h2 class="mb-4">🚀 {{ get_text('missions_challenges') }}</h2>
-                
-                {% if session.get('focus_areas') %}
-                    {% for area in session.get('focus_areas') %}
-                        {% if session.get('assessment_data', {}).get(area, {}).get('time', 0) < 5 %}
-                        <div class="alert alert-warning">
-                            <h4>{{ get_text('mission_for') }} {{ get_text(area) }}</h4>
-                            <p>{{ get_text('need_more_time') }}</p>
-                            <p class="mb-0"><strong>{{ get_text('suggestion') }}:</strong> {{ get_text('add_activities') }}</p>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-success">
-                            <h4>{{ get_text(area) }}</h4>
-                            <p>{{ get_text('doing_well') }}</p>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <p class="text-muted">{{ get_text('choose_focus_areas') }}</p>
-                {% endif %}
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">🚀 {{ get_text('missions_challenges') }}</h2>
+                    
+                    {% if session.get('focus_areas') %}
+                        {% for area in session.get('focus_areas') %}
+                            {% if session.get('assessment_data', {}).get(area, {}).get('time', 0) < 5 %}
+                            <div class="alert alert-warning">
+                                <h4 class="h5">{{ get_text('mission_for') }} {{ get_text(area) }}</h4>
+                                <p class="small">{{ get_text('need_more_time') }}</p>
+                                <p class="mb-0 small"><strong>{{ get_text('suggestion') }}:</strong> {{ get_text('add_activities') }}</p>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-success">
+                                <h4 class="h5">{{ get_text(area) }}</h4>
+                                <p class="small">{{ get_text('doing_well') }}</p>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">{{ get_text('choose_focus_areas') }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -236,12 +155,14 @@
 
 <style>
 .card {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 8px;
     transition: transform 0.2s;
     border-left: 4px solid transparent;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
 }
 
 .border-left-success { border-left-color: #4CAF50; }
@@ -254,28 +175,26 @@
 .border-left-green { border-left-color: #FF5722; }
 
 .category-icon {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 .card-text {
-    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
 }
 
-.area-card {
-    background-color: #fff;
+.area-assessment {
+    background-color: #f8f9fa;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.area-title {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+    padding: 1rem;
 }
 
 .assessment-slider {
     width: 100%;
+}
+
+.alert {
+    margin-bottom: 1rem;
+    border-radius: 8px;
 }
 </style>
 
