@@ -24,18 +24,32 @@
             <div class="time-cell">{{ "%02d:00"|format(hour) }}</div>
             {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
             <div class="day-cell" data-hour="{{ "%02d:00"|format(hour) }}" data-day="{{ day }}">
-                {% for activity in activities if activity.start_time == "%02d:00"|format(hour) and activity.day == day %}
-                <div class="activity-card {{ activity.category }}" 
-                     data-activity-id="{{ activity.id }}">
-                    <div class="card-title">
-                        {{ activity.category_colors.icon }} {{ activity.title }}
-                    </div>
-                    <div class="card-description">{{ activity.description }}</div>
-                    <div class="card-category">
-                        {{ activity.category_colors.icon }} {{ activity.category }}
-                        <span class="time-range">{{ activity.start_time }} - {{ activity.end_time }}</span>
-                    </div>
-                </div>
+                {% for activity in activities %}
+                    {% if activity.day == day %}
+                        {% set start_hour = activity.start_time.split(':')[0]|int %}
+                        {% set start_minute = activity.start_time.split(':')[1]|int %}
+                        {% set end_hour = activity.end_time.split(':')[0]|int %}
+                        {% set end_minute = activity.end_time.split(':')[1]|int %}
+                        {% set total_start_minutes = start_hour * 60 + start_minute %}
+                        {% set total_end_minutes = end_hour * 60 + end_minute %}
+                        {% if hour == start_hour %}
+                            <div class="activity-card {{ activity.category }}" 
+                                 data-activity-id="{{ activity.id }}"
+                                 data-start-minutes="{{ total_start_minutes }}"
+                                 data-end-minutes="{{ total_end_minutes }}"
+                                 data-start-offset="{{ start_minute }}">
+                                <div class="card-title">
+                                    {{ activity.title }}
+                                </div>
+                                <div class="card-time">
+                                    {{ activity.start_time }} - {{ activity.end_time }}
+                                </div>
+                                <div class="card-category">
+                                    {{ get_text(activity.category) }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </div>
             {% endfor %}
@@ -130,17 +144,26 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle activity card clicks
+    // Selecionar todos os cards de atividade
     const activityCards = document.querySelectorAll('.activity-card');
-    const removeEventBtn = document.getElementById('removeEventBtn');
-    const eventForm = document.getElementById('eventForm');
-    const modalTitle = document.getElementById('modalTitle');
     
+    // Configurar altura e posição dos cards
+    activityCards.forEach(card => {
+        const startMinutes = parseInt(card.dataset.startMinutes);
+        const endMinutes = parseInt(card.dataset.endMinutes);
+        const startOffset = parseInt(card.dataset.startOffset);
+        
+        // Definir variáveis CSS customizadas
+        card.style.setProperty('--start-minutes', startMinutes);
+        card.style.setProperty('--end-minutes', endMinutes);
+        card.style.setProperty('--start-offset', startOffset);
+    });
+
+    // Adicionar evento de clique aos cards
     activityCards.forEach(card => {
         card.addEventListener('click', function() {
             const activityId = this.dataset.activityId;
             if (activityId) {
-                // Load activity data and show modal
                 fetch(`/get_activity/${activityId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -151,16 +174,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('start_time').value = data.start_time;
                         document.getElementById('end_time').value = data.end_time;
                         
-                        // Check the appropriate day checkboxes
                         document.querySelectorAll('input[name="days"]').forEach(checkbox => {
                             checkbox.checked = data.days.includes(checkbox.value);
                         });
                         
-                        // Update modal title and show remove button
                         modalTitle.textContent = '{{ get_text("edit_event") }}';
                         removeEventBtn.style.display = 'inline-block';
                         
-                        // Show modal
                         const modal = new bootstrap.Modal(document.getElementById('eventModal'));
                         modal.show();
                     });

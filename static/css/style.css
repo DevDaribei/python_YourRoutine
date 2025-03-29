@@ -85,6 +85,7 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     padding: 20px;
     margin: 20px 0;
+    position: relative;
 }
 
 .schedule-header {
@@ -101,88 +102,108 @@ body {
     border-radius: 12px;
     font-weight: 600;
     color: #1a73e8;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .schedule-row {
     display: grid;
     grid-template-columns: 80px repeat(7, 1fr);
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     height: 60px;
 }
 
 .time-cell {
     background: #f8f9fa;
-    padding: 15px 10px;
+    padding: 8px;
     text-align: center;
-    border-radius: 12px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 12px;
     color: #666;
 }
 
 .day-cell {
     background: #ffffff;
-    min-height: 60px;
-    border-radius: 12px;
-    padding: 8px;
     border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 4px;
     position: relative;
+    height: 60px;
 }
 
 .activity-card {
     position: absolute;
-    left: 0;
-    right: 0;
-    margin: 4px;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 13px;
+    left: 4px;
+    right: 4px;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     cursor: pointer;
+    overflow: hidden;
     z-index: 10;
+    top: 0;
 }
 
-/* Category-specific styles */
-.activity-card.leisure {
-    background-color: #FFF3E0;
-    border-left: 4px solid #FF9800;
+.activity-card .card-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.activity-card .card-time {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.activity-card .card-category {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* Category Colors */
 .activity-card.career {
     background-color: #E3F2FD;
-    border-left: 4px solid #2196F3;
+    border-left: 3px solid #2196F3;
 }
 
 .activity-card.health {
     background-color: #E8F5E9;
-    border-left: 4px solid #4CAF50;
+    border-left: 3px solid #4CAF50;
 }
 
 .activity-card.relationships {
     background-color: #FCE4EC;
-    border-left: 4px solid #E91E63;
+    border-left: 3px solid #E91E63;
+}
+
+.activity-card.leisure {
+    background-color: #FFF3E0;
+    border-left: 3px solid #FF9800;
 }
 
 .activity-card.personal_development {
     background-color: #F3E5F5;
-    border-left: 4px solid #9C27B0;
+    border-left: 3px solid #9C27B0;
 }
 
 .activity-card.finances {
     background-color: #E0F2F1;
-    border-left: 4px solid #009688;
+    border-left: 3px solid #009688;
 }
 
 .activity-card.spirituality {
     background-color: #EDE7F6;
-    border-left: 4px solid #673AB7;
+    border-left: 3px solid #673AB7;
 }
 
 .activity-card.contribution {
     background-color: #FBE9E7;
-    border-left: 4px solid #FF5722;
+    border-left: 3px solid #FF5722;
 }
 
 .activity-card:hover {
@@ -190,31 +211,24 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.card-title {
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+/* Cálculo da altura e posição do card */
+.activity-card {
+    --hour-height: 60px;
+    top: calc(var(--start-offset, 0) / 60 * var(--hour-height));
+    height: calc((var(--end-minutes) - var(--start-minutes)) / 60 * var(--hour-height));
 }
 
-.card-description {
-    font-size: 12px;
-    margin-bottom: 6px;
-    color: #666;
+/* Definir variáveis CSS baseadas nos data attributes */
+.activity-card[data-start-minutes] {
+    --start-minutes: attr(data-start-minutes number);
 }
 
-.card-category {
-    font-size: 11px;
-    font-weight: 500;
-    color: #1a73e8;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.activity-card[data-end-minutes] {
+    --end-minutes: attr(data-end-minutes number);
 }
 
-.time-range {
-    margin-left: auto;
+.activity-card[data-start-offset] {
+    --start-offset: attr(data-start-offset number);
 }
 
 /* Form Styles */
@@ -280,9 +294,24 @@ body {
         grid-template-columns: 60px repeat(7, 1fr);
     }
     .time-cell {
-        font-size: 12px;
+        font-size: 10px;
+        padding: 4px;
     }
     .activity-card {
-        font-size: 11px;
+        font-size: 10px;
+        padding: 4px;
     }
-} 
+}
+
+[data-duration="1"] { --duration: 1; }
+[data-duration="2"] { --duration: 2; }
+[data-duration="3"] { --duration: 3; }
+[data-duration="4"] { --duration: 4; }
+[data-duration="5"] { --duration: 5; }
+[data-duration="6"] { --duration: 6; }
+[data-duration="7"] { --duration: 7; }
+[data-duration="8"] { --duration: 8; }
+[data-duration="9"] { --duration: 9; }
+[data-duration="10"] { --duration: 10; }
+[data-duration="11"] { --duration: 11; }
+[data-duration="12"] { --duration: 12; } 
