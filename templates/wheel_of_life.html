@@ -15,17 +15,6 @@
 
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-center mb-4">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="timeRange" id="daily" value="daily" checked>
-                            <label class="form-check-label" for="daily">{{ get_text('daily_view') }}</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="timeRange" id="weekly" value="weekly">
-                            <label class="form-check-label" for="weekly">{{ get_text('weekly_view') }}</label>
-                        </div>
-                    </div>
-
                     <div class="wheel-container" style="position: relative; height: 500px;">
                         <canvas id="wheelOfLife"></canvas>
                     </div>
@@ -84,8 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     // Function to calculate time distribution
-    function calculateTimeDistribution(activities, timeRange) {
-        const totalHours = timeRange === 'daily' ? 24 : 168; // 24 hours for daily, 168 for weekly
+    function calculateTimeDistribution(activities) {
+        const totalHours = 168; // 168 hours for weekly view
         const distribution = {};
         let totalActivityHours = 0;
 
@@ -214,21 +203,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle time range change
-    document.querySelectorAll('input[name="timeRange"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const timeRange = this.value;
-            const activities = {{ activities | tojson | safe }};
-            const distribution = calculateTimeDistribution(activities, timeRange);
-            updateWheelChart(distribution);
-            updateTimeDistributionTable(distribution);
-            updateInsights(distribution);
-        });
-    });
-
-    // Initial load
-    const activities = {{ activities | tojson | safe }};
-    const distribution = calculateTimeDistribution(activities, 'daily');
+    // Initial load with weekly view
+    const serverActivities = JSON.parse('{{ activities|tojson|safe }}');
+    const distribution = calculateTimeDistribution(serverActivities);
     updateWheelChart(distribution);
     updateTimeDistributionTable(distribution);
     updateInsights(distribution);
