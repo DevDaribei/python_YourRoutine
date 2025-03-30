@@ -1,5 +1,18 @@
-// Toggle sidebar on mobile
+/**
+ * Este arquivo contém o código JavaScript principal da aplicação
+ * Ele é responsável por gerenciar todas as interações do usuário e funcionalidades dinâmicas
+ */
+
+/**
+ * Ponto de entrada principal do código JavaScript
+ * O evento DOMContentLoaded garante que o código só será executado
+ * depois que toda a página HTML estiver carregada
+ */
 document.addEventListener('DOMContentLoaded', function() {
+    /**
+     * Gerenciamento da barra lateral em dispositivos móveis
+     * Permite mostrar/esconder a barra lateral ao clicar no botão
+     */
     const toggleBtn = document.querySelector('#sidebarCollapse');
     const sidebar = document.querySelector('#sidebar');
     
@@ -9,7 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle form submissions
+    /**
+     * Gerenciamento de envio de formulários
+     * Adiciona um indicador de carregamento ao botão de submit
+     * e desabilita o botão para evitar envios duplicados
+     */
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
@@ -21,7 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle assessment sliders
+    /**
+     * Gerenciamento dos sliders de autoavaliação
+     * Atualiza o valor exibido ao lado do slider quando o usuário o move
+     */
     const sliders = document.querySelectorAll('.assessment-slider');
     sliders.forEach(slider => {
         slider.addEventListener('input', function() {
@@ -33,15 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle activity modal
+    /**
+     * Gerenciamento do modal de atividades
+     * Controla a exibição e fechamento do modal de adição de atividades
+     */
     const addEventBtn = document.querySelector('#addEventBtn');
     const eventModal = document.querySelector('#eventModal');
     
     if (addEventBtn && eventModal) {
+        // Abre o modal ao clicar no botão de adicionar
         addEventBtn.addEventListener('click', function() {
             eventModal.classList.add('show');
         });
 
+        // Fecha o modal ao clicar no botão de fechar
         const closeBtn = eventModal.querySelector('.close');
         if (closeBtn) {
             closeBtn.addEventListener('click', function() {
@@ -49,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Close modal when clicking outside
+        // Fecha o modal ao clicar fora dele
         window.addEventListener('click', function(e) {
             if (e.target === eventModal) {
                 eventModal.classList.remove('show');
@@ -57,7 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle time input validation
+    /**
+     * Validação dos campos de entrada de tempo
+     * Garante que o horário de término seja posterior ao horário de início
+     */
     const timeInputs = document.querySelectorAll('input[type="time"]');
     timeInputs.forEach(input => {
         input.addEventListener('change', function() {
@@ -76,11 +104,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle category color updates
+    /**
+     * Gerenciamento das cores das categorias
+     * Atualiza as cores e ícones do card de atividade baseado na categoria selecionada
+     */
     const categorySelect = document.querySelector('#category');
     const activityCard = document.querySelector('.activity-card');
     
     if (categorySelect && activityCard) {
+        // Define as cores e ícones para cada categoria
         const categoryColors = {
             'leisure': { bg: '#FFF3E0', border: '#FF9800', icon: '🎮' },
             'career': { bg: '#E3F2FD', border: '#2196F3', icon: '💼' },
@@ -92,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'contribution': { bg: '#FBE9E7', border: '#FF5722', icon: '🤝' }
         };
 
+        // Atualiza as cores e ícone quando uma categoria é selecionada
         categorySelect.addEventListener('change', function() {
             const category = this.value;
             const colors = categoryColors[category];
@@ -106,18 +139,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle assessment form submission
+    /**
+     * Gerenciamento do envio do formulário de autoavaliação
+     * Envia os dados para o servidor e mostra notificações de sucesso/erro
+     */
     const assessmentForm = document.querySelector('#assessmentForm');
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Coleta os dados do formulário
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => {
                 data[key] = value;
             });
 
+            // Envia os dados para o servidor
             fetch('/save_assessment', {
                 method: 'POST',
                 headers: {
@@ -141,8 +179,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Notification system
+/**
+ * Sistema de notificações
+ * Cria e exibe notificações temporárias na tela
+ * @param {string} type - Tipo da notificação (success, error, etc)
+ * @param {string} message - Mensagem a ser exibida
+ */
 function showNotification(type, message) {
+    // Cria o elemento da notificação
     const notification = document.createElement('div');
     notification.className = `alert alert-${type} alert-dismissible fade show`;
     notification.role = 'alert';
@@ -151,15 +195,22 @@ function showNotification(type, message) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
     
+    // Adiciona a notificação ao início do container
     const container = document.querySelector('.container-fluid');
     container.insertBefore(notification, container.firstChild);
     
+    // Remove a notificação após 5 segundos
     setTimeout(() => {
         notification.remove();
     }, 5000);
 }
 
-// Handle language change
+/**
+ * Função para mudar o idioma da aplicação
+ * Envia uma requisição ao servidor para alterar o idioma
+ * e recarrega a página para aplicar as mudanças
+ * @param {string} lang - Código do idioma (pt, en, etc)
+ */
 function changeLanguage(lang) {
     fetch('/change_language', {
         method: 'POST',

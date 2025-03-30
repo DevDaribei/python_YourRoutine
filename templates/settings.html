@@ -1,39 +1,50 @@
+<!-- Template de configurações que herda da estrutura base -->
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Container principal com largura fixa -->
 <div class="container">
+    <!-- Título da página -->
     <h1 class="mb-4">⚙️ {{ get_text('settings') }}</h1>
 
-    <!-- Language Settings -->
+    <!-- Card de configurações de idioma -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">{{ get_text('select_language') }}</h5>
+            <!-- Grupo de botões para seleção de idioma -->
             <div class="btn-group" role="group">
+                <!-- Botão para português -->
                 <button type="button" class="btn btn-outline-primary {% if session.get('language') == 'pt' %}active{% endif %}" 
                         onclick="changeLanguage('pt')">Português</button>
+                <!-- Botão para inglês -->
                 <button type="button" class="btn btn-outline-primary {% if session.get('language') == 'en' %}active{% endif %}" 
                         onclick="changeLanguage('en')">English</button>
             </div>
         </div>
     </div>
 
-    <!-- Password Change Form -->
+    <!-- Card de alteração de senha -->
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ get_text('change_password') }}</h5>
+            <!-- Formulário para atualizar senha -->
             <form method="POST" action="{{ url_for('update_password') }}">
+                <!-- Campo para senha atual -->
                 <div class="mb-3">
                     <label class="form-label">{{ get_text('current_password') }}</label>
                     <input type="password" class="form-control" name="current_password" required>
                 </div>
+                <!-- Campo para nova senha -->
                 <div class="mb-3">
                     <label class="form-label">{{ get_text('new_password') }}</label>
                     <input type="password" class="form-control" name="new_password" required>
                 </div>
+                <!-- Campo para confirmar nova senha -->
                 <div class="mb-3">
                     <label class="form-label">{{ get_text('confirm_password') }}</label>
                     <input type="password" class="form-control" name="confirm_password" required>
                 </div>
+                <!-- Botão para salvar alterações -->
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> {{ get_text('update') }}
                 </button>
@@ -42,8 +53,11 @@
     </div>
 </div>
 
+<!-- Script para mudança de idioma -->
 <script>
+// Função para alterar o idioma da aplicação
 function changeLanguage(lang) {
+    // Envia requisição POST para a rota de mudança de idioma
     fetch('/change_language', {
         method: 'POST',
         headers: {
@@ -53,11 +67,13 @@ function changeLanguage(lang) {
     })
     .then(response => response.json())
     .then(data => {
+        // Se a mudança foi bem sucedida, recarrega a página
         if (data.success) {
             window.location.reload();
         }
     })
     .catch(error => {
+        // Em caso de erro, registra no console
         console.error('Error:', error);
     });
 }

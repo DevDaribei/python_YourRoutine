@@ -1,18 +1,26 @@
+<!-- Template de autenticação que herda da estrutura base -->
 {% extends "base.html" %}
 
 {% block auth_content %}
+<!-- Container principal para centralizar o conteúdo -->
 <div class="container">
     <div class="row justify-content-center">
+        <!-- Coluna com largura média para o formulário -->
         <div class="col-md-6">
+            <!-- Container do formulário de login/cadastro -->
             <div class="login-container">
+                <!-- Título do aplicativo -->
                 <h1 class="text-center mb-4">🌟 Your Routine</h1>
                 
+                <!-- Abas para alternar entre login e cadastro -->
                 <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                    <!-- Aba de Login -->
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">
                             {{ get_text('login') }}
                         </button>
                     </li>
+                    <!-- Aba de Cadastro -->
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">
                             {{ get_text('signup') }}
@@ -20,47 +28,61 @@
                     </li>
                 </ul>
 
+                <!-- Conteúdo das abas -->
                 <div class="tab-content" id="authTabsContent">
-                    <!-- Login Form -->
+                    <!-- Formulário de Login -->
                     <div class="tab-pane fade show active" id="login" role="tabpanel">
+                        <!-- Formulário que envia dados para a rota de login -->
                         <form method="POST" action="{{ url_for('login') }}">
+                            <!-- Campo de usuário -->
                             <div class="mb-3">
                                 <label for="username" class="form-label">{{ get_text('username') }}</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
                             </div>
+                            <!-- Campo de senha -->
                             <div class="mb-3">
                                 <label for="password" class="form-label">{{ get_text('password') }}</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
+                            <!-- Botão de login -->
                             <button type="submit" class="btn btn-primary w-100">{{ get_text('login') }}</button>
                         </form>
                     </div>
 
-                    <!-- Signup Form -->
+                    <!-- Formulário de Cadastro -->
                     <div class="tab-pane fade" id="signup" role="tabpanel">
+                        <!-- Formulário que envia dados para a rota de cadastro -->
                         <form method="POST" action="{{ url_for('signup') }}">
+                            <!-- Campo de usuário para cadastro -->
                             <div class="mb-3">
                                 <label for="new_username" class="form-label">{{ get_text('username') }}</label>
                                 <input type="text" class="form-control" id="new_username" name="username" required>
                             </div>
+                            <!-- Campo de senha para cadastro -->
                             <div class="mb-3">
                                 <label for="new_password" class="form-label">{{ get_text('password') }}</label>
                                 <input type="password" class="form-control" id="new_password" name="password" required>
                             </div>
+                            <!-- Campo de confirmação de senha -->
                             <div class="mb-3">
                                 <label for="confirm_password" class="form-label">{{ get_text('confirm_password') }}</label>
                                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                             </div>
+                            <!-- Botão de cadastro -->
                             <button type="submit" class="btn btn-primary w-100">{{ get_text('signup') }}</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Language Selector -->
+                <!-- Seletor de idioma -->
                 <div class="mt-4 text-center">
+                    <!-- Formulário para mudar o idioma -->
                     <form method="POST" action="{{ url_for('change_language') }}" class="d-inline">
+                        <!-- Select com opções de idioma -->
                         <select name="language" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                            <!-- Opção de português -->
                             <option value="pt" {% if session.get('language') == 'pt' %}selected{% endif %}>Português</option>
+                            <!-- Opção de inglês -->
                             <option value="en" {% if session.get('language') == 'en' %}selected{% endif %}>English</option>
                         </select>
                     </form>

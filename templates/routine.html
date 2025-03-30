@@ -1,7 +1,10 @@
+<!-- Template da rotina que herda da estrutura base -->
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Container principal com largura total -->
 <div class="container-fluid">
+    <!-- Cabeçalho com título e botão de adicionar evento -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>📅 {{ get_text('your_routine') }}</h1>
         <button type="button" class="btn btn-primary" id="addEventBtn">
@@ -9,8 +12,9 @@
         </button>
     </div>
 
+    <!-- Container da grade de horários -->
     <div class="schedule-container">
-        <!-- Schedule Header -->
+        <!-- Cabeçalho da grade com dias da semana -->
         <div class="schedule-header">
             <div class="header-cell">{{ get_text('time') }}</div>
             {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
@@ -18,21 +22,27 @@
             {% endfor %}
         </div>
 
-        <!-- Schedule Grid -->
+        <!-- Grade de horários com 24 linhas (uma para cada hora) -->
         {% for hour in range(24) %}
         <div class="schedule-row">
+            <!-- Célula com o horário -->
             <div class="time-cell">{{ "%02d:00"|format(hour) }}</div>
+            <!-- Células para cada dia da semana -->
             {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
             <div class="day-cell" data-hour="{{ "%02d:00"|format(hour) }}" data-day="{{ day }}">
+                <!-- Loop para verificar atividades neste horário e dia -->
                 {% for activity in activities %}
                     {% if activity.day == day %}
+                        <!-- Cálculo dos minutos para posicionamento -->
                         {% set start_hour = activity.start_time.split(':')[0]|int %}
                         {% set start_minute = activity.start_time.split(':')[1]|int %}
                         {% set end_hour = activity.end_time.split(':')[0]|int %}
                         {% set end_minute = activity.end_time.split(':')[1]|int %}
                         {% set total_start_minutes = start_hour * 60 + start_minute %}
                         {% set total_end_minutes = end_hour * 60 + end_minute %}
+                        <!-- Renderiza o card apenas na hora inicial da atividade -->
                         {% if hour == start_hour %}
+                            <!-- Card da atividade com dados para posicionamento -->
                             <div class="activity-card {{ activity.category }}" 
                                  data-activity-id="{{ activity.id }}"
                                  data-start-minutes="{{ total_start_minutes }}"
@@ -58,23 +68,28 @@
     </div>
 </div>
 
-<!-- Event Modal -->
+<!-- Modal para adicionar/editar eventos -->
 <div class="modal fade" id="eventModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- Cabeçalho do modal -->
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">{{ get_text('add_event') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <!-- Corpo do modal com formulário -->
             <div class="modal-body">
                 <form id="eventForm" method="POST" action="{{ url_for('save_activity') }}">
+                    <!-- Campo oculto para ID da atividade -->
                     <input type="hidden" name="activity_id" id="activityId">
                     
+                    <!-- Campo de título -->
                     <div class="mb-3">
                         <label for="title" class="form-label">{{ get_text('title') }}</label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
 
+                    <!-- Seletor de categoria -->
                     <div class="mb-3">
                         <label for="category" class="form-label">{{ get_text('category') }}</label>
                         <select class="form-select" id="category" name="category" required>
@@ -89,11 +104,13 @@
                         </select>
                     </div>
 
+                    <!-- Campo de descrição -->
                     <div class="mb-3">
                         <label for="description" class="form-label">{{ get_text('description') }}</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
 
+                    <!-- Seleção de dias da semana -->
                     <div class="mb-3">
                         <label class="form-label">{{ get_text('days') }}</label>
                         <div class="row">
@@ -112,6 +129,7 @@
                         </div>
                     </div>
 
+                    <!-- Campos de horário -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="start_time" class="form-label">{{ get_text('start_time') }}</label>
@@ -123,6 +141,7 @@
                         </div>
                     </div>
 
+                    <!-- Botões de ação -->
                     <div class="text-end">
                         <button type="button" class="btn btn-danger me-2" id="removeEventBtn" style="display: none;">
                             <i class="fas fa-trash"></i> {{ get_text('remove') }}
@@ -143,30 +162,33 @@
 
 {% block scripts %}
 <script>
+// Executa quando o documento estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
-    // Selecionar todos os cards de atividade
+    // Seleciona todos os cards de atividade na grade
     const activityCards = document.querySelectorAll('.activity-card');
     
-    // Configurar altura e posição dos cards
+    // Configura a altura e posição de cada card baseado nos dados
     activityCards.forEach(card => {
         const startMinutes = parseInt(card.dataset.startMinutes);
         const endMinutes = parseInt(card.dataset.endMinutes);
         const startOffset = parseInt(card.dataset.startOffset);
         
-        // Definir variáveis CSS customizadas
+        // Define variáveis CSS para cálculos de posicionamento
         card.style.setProperty('--start-minutes', startMinutes);
         card.style.setProperty('--end-minutes', endMinutes);
         card.style.setProperty('--start-offset', startOffset);
     });
 
-    // Adicionar evento de clique aos cards
+    // Adiciona evento de clique para editar atividades
     activityCards.forEach(card => {
         card.addEventListener('click', function() {
             const activityId = this.dataset.activityId;
             if (activityId) {
+                // Busca dados da atividade no servidor
                 fetch(`/get_activity/${activityId}`)
                     .then(response => response.json())
                     .then(data => {
+                        // Preenche o formulário com os dados da atividade
                         document.getElementById('activityId').value = data.id;
                         document.getElementById('title').value = data.title;
                         document.getElementById('category').value = data.category;
@@ -174,13 +196,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('start_time').value = data.start_time;
                         document.getElementById('end_time').value = data.end_time;
                         
+                        // Marca os dias da semana correspondentes
                         document.querySelectorAll('input[name="days"]').forEach(checkbox => {
                             checkbox.checked = data.days.includes(checkbox.value);
                         });
                         
+                        // Atualiza o título do modal e mostra botão de remover
                         modalTitle.textContent = '{{ get_text("edit_event") }}';
                         removeEventBtn.style.display = 'inline-block';
                         
+                        // Abre o modal
                         const modal = new bootstrap.Modal(document.getElementById('eventModal'));
                         modal.show();
                     });
@@ -188,24 +213,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle add event button
+    // Manipula o botão de adicionar evento
     document.getElementById('addEventBtn').addEventListener('click', function() {
-        // Reset form
+        // Limpa o formulário
         eventForm.reset();
         document.getElementById('activityId').value = '';
         modalTitle.textContent = '{{ get_text("add_event") }}';
         removeEventBtn.style.display = 'none';
         
-        // Show modal
+        // Abre o modal
         const modal = new bootstrap.Modal(document.getElementById('eventModal'));
         modal.show();
     });
 
-    // Handle remove event button
+    // Manipula o botão de remover evento
     removeEventBtn.addEventListener('click', function() {
         const activityId = document.getElementById('activityId').value;
         if (activityId) {
             if (confirm('{{ get_text("remove") }}?')) {
+                // Envia requisição para remover a atividade
                 fetch(`/delete_activity/${activityId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -223,14 +249,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle category color updates
+    // Atualiza cores do card ao mudar categoria
     document.getElementById('category').addEventListener('change', function() {
         const option = this.options[this.selectedIndex];
         const bg = option.dataset.bg;
         const border = option.dataset.border;
         const icon = option.dataset.icon;
         
-        // Update preview card if it exists
+        // Atualiza o card de preview se existir
         const previewCard = document.querySelector('.activity-card.preview');
         if (previewCard) {
             previewCard.style.backgroundColor = bg;
@@ -240,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle time validation
+    // Validação dos campos de horário
     const timeInputs = document.querySelectorAll('input[type="time"]');
     timeInputs.forEach(input => {
         input.addEventListener('change', function() {
@@ -248,12 +274,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const endTime = document.getElementById('end_time');
             
             if (startTime.value && endTime.value) {
-                const start = new Date(`1970-01-01T${startTime.value}`);
-                const end = new Date(`1970-01-01T${endTime.value}`);
-                
-                if (end <= start) {
-                    alert('{{ get_text("error_time") }}');
-                    endTime.value = '';
+                // Verifica se o horário final é maior que o inicial
+                if (startTime.value >= endTime.value) {
+                    alert('{{ get_text("end_time_must_be_after_start_time") }}');
+                    this.value = '';
                 }
             }
         });

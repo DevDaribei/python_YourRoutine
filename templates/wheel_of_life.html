@@ -54,13 +54,31 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- Importa a biblioteca Chart.js que será usada para criar o gráfico polar -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+/**
+ * Este é o ponto de entrada principal do código JavaScript
+ * O evento DOMContentLoaded garante que o código só será executado
+ * depois que toda a página HTML estiver carregada
+ */
 document.addEventListener('DOMContentLoaded', function() {
+    // Obtém o contexto do canvas onde o gráfico será desenhado
+    // getContext('2d') permite que desenhemos no canvas
     const ctx = document.getElementById('wheelOfLife').getContext('2d');
+    
+    // Variável para armazenar a instância do gráfico
+    // Será usado para atualizar ou destruir o gráfico quando necessário
     let wheelChart = null;
 
-    // Define categories and their colors
+    /**
+     * Array que define todas as categorias da roda da vida
+     * Cada categoria é um objeto com:
+     * - id: identificador único usado internamente
+     * - label: nome traduzido que será mostrado no gráfico
+     * - color: cor hexadecimal que será usada no gráfico
+     * - icon: emoji que representa a categoria
+     */
     const categories = [
         { id: 'leisure', label: '{{ get_text("leisure") }}', color: '#FF9800', icon: '🎮' },
         { id: 'career', label: '{{ get_text("career") }}', color: '#2196F3', icon: '💼' },
@@ -72,13 +90,22 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'contribution', label: '{{ get_text("contribution") }}', color: '#FF5722', icon: '🤝' }
     ];
 
-    // Function to calculate time distribution
+    /**
+     * Função que calcula como o tempo está distribuído entre as categorias
+     * @param {Array} activities - Lista de atividades do usuário
+     * @returns {Object} - Objeto com a distribuição de tempo por categoria
+     */
     function calculateTimeDistribution(activities) {
-        const totalHours = 168; // 168 hours for weekly view
+        // Total de horas em uma semana (7 dias * 24 horas)
+        const totalHours = 168;
+        
+        // Objeto que armazenará o tempo e porcentagem de cada categoria
         const distribution = {};
+        
+        // Soma total de horas de todas as atividades
         let totalActivityHours = 0;
 
-        // Initialize distribution
+        // Inicializa cada categoria com zero horas e zero porcentagem
         categories.forEach(cat => {
             distribution[cat.id] = {
                 hours: 0,
@@ -86,52 +113,74 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
 
-        // Calculate hours for each category
+        // Processa cada atividade para calcular sua duração
         activities.forEach(activity => {
+            // Converte os horários de início e fim para objetos Date
+            // Usa uma data fixa (1970-01-01) apenas para calcular a diferença de tempo
             const start = new Date(`1970-01-01T${activity.start_time}`);
             const end = new Date(`1970-01-01T${activity.end_time}`);
+            
+            // Calcula a duração em horas
+            // (end - start) dá a diferença em milissegundos
+            // Divide por (1000 * 60 * 60) para converter para horas
             const hours = (end - start) / (1000 * 60 * 60);
             
+            // Adiciona as horas à categoria correspondente
             distribution[activity.category].hours += hours;
+            // Atualiza o total de horas de atividades
             totalActivityHours += hours;
         });
 
-        // Calculate percentages
+        // Calcula a porcentagem de tempo para cada categoria
         categories.forEach(cat => {
+            // Porcentagem = (horas da categoria / total de horas na semana) * 100
             distribution[cat.id].percentage = (distribution[cat.id].hours / totalHours) * 100;
         });
 
         return distribution;
     }
 
-    // Function to update the wheel chart
+    /**
+     * Função que cria e atualiza o gráfico polar (roda da vida)
+     * @param {Object} distribution - Objeto com a distribuição de tempo por categoria
+     */
     function updateWheelChart(distribution) {
+        // Se já existir um gráfico, destroi para evitar sobreposição
         if (wheelChart) {
             wheelChart.destroy();
         }
 
+        // Prepara os dados para o gráfico
         const data = {
+            // Labels: Nomes das categorias com seus ícones
             labels: categories.map(cat => `${cat.icon} ${cat.label}`),
+            // Datasets: Dados e aparência do gráfico
             datasets: [{
+                // data: Array com as porcentagens de cada categoria
                 data: categories.map(cat => distribution[cat.id].percentage),
+                // backgroundColor: Cores de fundo de cada seção
                 backgroundColor: categories.map(cat => cat.color),
+                // borderColor: Cor da borda entre as seções
                 borderColor: '#fff',
+                // borderWidth: Espessura da borda
                 borderWidth: 2
             }]
         };
 
+        // Configuração completa do gráfico
         const config = {
-            type: 'polarArea',
+            type: 'polarArea', // Tipo do gráfico: área polar (roda)
             data: data,
             options: {
-                responsive: true,
+                responsive: true, // Gráfico se ajusta ao tamanho do container
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'right'
+                        position: 'right' // Legenda à direita do gráfico
                     },
                     tooltip: {
                         callbacks: {
+                            // Personaliza o texto que aparece ao passar o mouse
                             label: function(context) {
                                 const category = categories[context.dataIndex];
                                 return `${category.label}: ${distribution[category.id].hours.toFixed(1)}h (${distribution[category.id].percentage.toFixed(1)}%)`;
@@ -141,40 +190,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 scales: {
                     r: {
-                        beginAtZero: true,
-                        max: 100
+                        beginAtZero: true, // Começa do zero
+                        max: 100 // Máximo de 100%
                     }
                 }
             }
         };
 
+        // Cria o novo gráfico com as configurações definidas
         wheelChart = new Chart(ctx, config);
     }
 
-    // Function to update the time distribution table
+    /**
+     * Função que atualiza a tabela de distribuição de tempo
+     * @param {Object} distribution - Objeto com a distribuição de tempo por categoria
+     */
     function updateTimeDistributionTable(distribution) {
+        // Obtém o elemento tbody da tabela onde serão inseridas as linhas
         const tbody = document.getElementById('timeDistribution');
+        // Limpa o conteúdo atual da tabela
         tbody.innerHTML = '';
 
+        // Para cada categoria, cria uma nova linha na tabela
         categories.forEach(cat => {
             const row = document.createElement('tr');
+            // Preenche a linha com:
+            // - Ícone e nome da categoria
+            // - Horas (com 1 casa decimal)
+            // - Porcentagem (com 1 casa decimal)
             row.innerHTML = `
                 <td>${cat.icon} ${cat.label}</td>
                 <td>${distribution[cat.id].hours.toFixed(1)}h</td>
                 <td>${distribution[cat.id].percentage.toFixed(1)}%</td>
             `;
+            // Adiciona a linha à tabela
             tbody.appendChild(row);
         });
     }
 
-    // Function to update insights
+    /**
+     * Função que gera e exibe insights baseados na distribuição de tempo
+     * @param {Object} distribution - Objeto com a distribuição de tempo por categoria
+     */
     function updateInsights(distribution) {
+        // Obtém o elemento onde os insights serão mostrados
         const insights = document.getElementById('insights');
+        // Limpa os insights anteriores
         insights.innerHTML = '';
 
-        // Find categories with low time allocation
+        // Encontra categorias com pouco tempo (menos de 10%)
         const lowTimeCategories = categories.filter(cat => distribution[cat.id].percentage < 10);
         if (lowTimeCategories.length > 0) {
+            // Cria um alerta de aviso para categorias com pouco tempo
             const warning = document.createElement('div');
             warning.className = 'alert alert-warning';
             warning.innerHTML = `
@@ -187,25 +254,30 @@ document.addEventListener('DOMContentLoaded', function() {
             insights.appendChild(warning);
         }
 
-        // Find categories with high time allocation
+        // Encontra categorias com muito tempo (mais de 40%)
         const highTimeCategories = categories.filter(cat => distribution[cat.id].percentage > 40);
         if (highTimeCategories.length > 0) {
-            const warning = document.createElement('div');
-            warning.className = 'alert alert-info';
-            warning.innerHTML = `
-                <h5>💡 {{ get_text('high_time_warning') }}</h5>
-                <p>{{ get_text('consider_balancing_time_in') }}:</p>
+            // Cria um alerta de sugestão para categorias com muito tempo
+            const suggestion = document.createElement('div');
+            suggestion.className = 'alert alert-info';
+            suggestion.innerHTML = `
+                <h5>💡 {{ get_text('high_time_suggestion') }}</h5>
+                <p>{{ get_text('consider_reducing_time_in') }}:</p>
                 <ul>
                     ${highTimeCategories.map(cat => `<li>${cat.icon} ${cat.label}</li>`).join('')}
                 </ul>
             `;
-            insights.appendChild(warning);
+            insights.appendChild(suggestion);
         }
     }
 
-    // Initial load with weekly view
-    const serverActivities = JSON.parse('{{ activities|tojson|safe }}');
-    const distribution = calculateTimeDistribution(serverActivities);
+    // Carrega os dados das atividades do servidor
+    const activities = JSON.parse('{{ activities | tojson | safe }}');
+    
+    // Calcula a distribuição de tempo
+    const distribution = calculateTimeDistribution(activities);
+    
+    // Atualiza o gráfico, a tabela e os insights
     updateWheelChart(distribution);
     updateTimeDistributionTable(distribution);
     updateInsights(distribution);
